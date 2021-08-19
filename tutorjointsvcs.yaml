@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: tutorjointsvcs
+  labels:
+    cloud.googleapis.com/location: us-central1
+  annotations:
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '3'
+    spec:
+      serviceAccountName: tutorjointsvcs
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      containers:
+        - image: gcr.io/${PROJECT_ID}/tutorjointsvcs:latest
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+  traffic:
+    - percent: 100
+      latestRevision: true
